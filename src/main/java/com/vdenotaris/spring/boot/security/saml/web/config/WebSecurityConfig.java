@@ -167,7 +167,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // SAML 2.0 WebSSO Assertion Consumer
     @Bean
     public WebSSOProfileConsumer webSSOprofileConsumer() {
-        return new WebSSOProfileConsumerImpl();
+        WebSSOProfileConsumerImpl webSSOProfileConsumerImpl = new WebSSOProfileConsumerImpl();
+        //webSSOProfileConsumerImpl.setMaxAuthenticationAge(0);
+		return webSSOProfileConsumerImpl;
     }
  
     // SAML 2.0 Holder-of-Key WebSSO Assertion Consumer
@@ -275,14 +277,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("idp-ssocircle")
 	public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
 			throws MetadataProviderException {
-		String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
+//		String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
+		String idpSSOCircleMetadataURL = "https://dev-771949.oktapreview.com/app/exk5nujgjzgEaB9BB0h7/sso/saml/metadata";
 		Timer backgroundTaskTimer = new Timer(true);
 		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
 				backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
 		httpMetadataProvider.setParserPool(parserPool());
 		ExtendedMetadataDelegate extendedMetadataDelegate = 
 				new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
-		extendedMetadataDelegate.setMetadataTrustCheck(true);
+		extendedMetadataDelegate.setMetadataTrustCheck(true);//changed to false DNR
 		extendedMetadataDelegate.setMetadataRequireSignature(false);
 		return extendedMetadataDelegate;
 	}
@@ -302,10 +305,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public MetadataGenerator metadataGenerator() {
         MetadataGenerator metadataGenerator = new MetadataGenerator();
-        metadataGenerator.setEntityId("com:vdenotaris:spring:sp");
+//        metadataGenerator.setEntityId("com:vdenotaris:spring:sp");
         metadataGenerator.setExtendedMetadata(extendedMetadata());
-        metadataGenerator.setIncludeDiscoveryExtension(false);
-        metadataGenerator.setKeyManager(keyManager()); 
+//        metadataGenerator.setIncludeDiscoveryExtension(false);
+//        metadataGenerator.setKeyManager(keyManager()); 
         return metadataGenerator;
     }
  
